@@ -36,8 +36,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no user@your-vm-ip <<EOF
             cd /path/to/your/project
-            # Pull latest changes from GitHub repository (no git pull needed 
-as code is already pulled in the previous steps)
+          
             sudo systemctl restart your-service
             exit
           EOF
