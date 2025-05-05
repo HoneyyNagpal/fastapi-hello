@@ -1,0 +1,47 @@
+name: Deploy FastAPI to VM
+
+on:
+  push:
+    branches:
+      - main  
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  t
+
+    steps:
+     
+      - name: Checkout Code
+        uses: actions/checkout@v2  
+
+      
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3  
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}  
+      
+      - name: Install dependencies on VM
+        run: |
+          ssh -o StrictHostKeyChecking=no user@your-vm-ip <<EOF
+            cd /path/to/your/project
+            # Install required dependencies (e.g., virtualenv, pip packages)
+            python3 -m venv venv
+            source venv/bin/activate
+            pip install -r requirements.txt
+            exit
+          EOF
+
+      
+      - name: Deploy code to VM
+        run: |
+          ssh -o StrictHostKeyChecking=no user@your-vm-ip <<EOF
+            cd /path/to/your/project
+            # Pull latest changes from GitHub repository (no git pull needed 
+as code is already pulled in the previous steps)
+            sudo systemctl restart your-service
+            exit
+          EOF
+
+      
+      - name: Send Notification
+        run: echo "Deployment Successful!"  
